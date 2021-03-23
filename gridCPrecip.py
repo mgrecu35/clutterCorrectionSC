@@ -1,8 +1,18 @@
 from netCDF4 import Dataset
 import glob
 import numpy as np
+m=[1,2,12]
+mm='_DJF'
+title='January,February and December 2018'
+#mm='_JJA'
+#title='July to August 2018'
+fsL=[]
+for m1 in m:
+    fs=glob.glob("out/2B*2018%2.2i*HDF5"%m1)
+    fs=sorted(fs)
+    fsL.extend(fs)
+fs=fsL
 
-fs=glob.glob("out/2B*2018*HDF5")
 dx=2.5
 nxg=int(130/2.5)
 nyg=int(360/2.5)
@@ -71,9 +81,10 @@ ratio=np.ma.array(ratio,mask=ratio<0.05)
 c=plt.pcolormesh(np.arange(nyg+1)*dx+dx/2,np.arange(nxg+1)*dx-65+dx/2,ratio*100,cmap='jet',transform=ccrs.PlateCarree(),\
                      vmin=0,vmax=50)
 gl = ax.gridlines(crs=ccrs.PlateCarree(), linewidth=2, color='black', alpha=0.5, linestyle='--', draw_labels=True)
+plt.title(title)
 cbar=plt.colorbar(c,orientation='horizontal')
 cbar.ax.set_title('[%]')
-plt.savefig('mapDiff_percentage.png')
+plt.savefig('mapDiff_percentage%s.png'%mm)
 plt.figure(figsize=(10,6))
 ax = plt.axes(projection=ccrs.PlateCarree())
 ax.coastlines()
@@ -82,9 +93,10 @@ diffSfc=np.ma.array(sfcPrecipC_G-sfcPrecipG,mask=24*abs(sfcPrecipC_G-sfcPrecipG)
 c=plt.pcolormesh(np.arange(nyg+1)*dx+dx/2,np.arange(nxg+1)*dx-65+dx/2,diffSfc*24,transform=ccrs.PlateCarree(),\
                    cmap='jet',vmin=0.0,vmax=2.0)
 gl = ax.gridlines(crs=ccrs.PlateCarree(), linewidth=2, color='black', alpha=0.5, linestyle='--', draw_labels=True)
+plt.title(title)
 cbar=plt.colorbar(c,orientation='horizontal')
 cbar.ax.set_title('mm/day')
-plt.savefig('mapDiff_mmPerDay.png')
+plt.savefig('mapDiff_mmPerDay%s.png'%mm)
 
 matplotlib.rcParams.update({'font.size': 13})
 plt.figure()
@@ -93,4 +105,5 @@ plt.xlabel('Latitude')
 plt.title('Surface precipitation relative difference')
 plt.ylabel('(%)')
 plt.xlim(-63.75,63.75)
-plt.savefig('sfcPrecipRelDiff.png')
+plt.title(title)
+plt.savefig('sfcPrecipRelDiff%s.png'%mm)

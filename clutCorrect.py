@@ -17,8 +17,15 @@ from  netCDF4 import Dataset
 ifig=0
 import glob
 import matplotlib.pyplot as plt
-fs=glob.glob("../cmbv7Temp/CMBOut/2B*201810*")
-fs=sorted(fs)
+m=[2]
+fsL=[]
+for m1 in m:
+    fs=glob.glob("../cmbv7Temp/CMBOut/2B*2018%2.2i*"%m1)
+    fs=sorted(fs)
+    fsL.extend(fs)
+fs=fsL[144:-10]
+#print(fsL)
+#stop
 iplot=0
 import pickle
 d=pickle.load(open("biasCorrectTablesPRate.pklz","rb"))
